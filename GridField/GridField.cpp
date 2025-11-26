@@ -18,7 +18,8 @@ void show();
 void spawnSymbol(int *pos_x,int *pos_y,const char c);
 void changePosition(int x,int y,const char c);
 bool checkHammer();
-bool checkPosition(int pos_x, int pos_y);
+bool checkPositionX(int pos_x);
+bool checkPositionY(int pos_y);
 void throwHammer();
 
 int main()
@@ -96,9 +97,7 @@ int main()
             reset();
             break;
         case ' ':
-            if (checkPosition(position_x, position_y)) {
-                throwHammer();
-            }
+            throwHammer();
         }
 
 
@@ -148,17 +147,23 @@ bool checkHammer() {
     }
     return false;
 }
-bool checkPosition(int pos_x, int pos_y) {
-    if ((pos_x != 0 && pos_x != WIDTH - 1) && (pos_y != 0 && pos_y != HEIGHT - 1)) {
+bool checkPositionX(int pos_x) {
+    if (pos_x != 0 && pos_x != WIDTH - 1) {
+        return true;
+    }
+    return false;
+}
+bool checkPositionY(int pos_y) {
+    if (pos_y != 0 && pos_y != HEIGHT - 1) {
         return true;
     }
     return false;
 }
 void throwHammer() {
-    if (position_x == pos_hammer_x) {
+    if (position_x == pos_hammer_x && checkPositionY(position_y)) {
         pos_hammer_y = abs(pos_hammer_y - position_y * 2);
     }
-    else if (position_y == pos_hammer_y) {
+    else if (position_y == pos_hammer_y && checkPositionX(position_x)) {
         pos_hammer_x = abs(pos_hammer_x - position_x * 2);
     }
 }
