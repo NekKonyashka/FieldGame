@@ -3,8 +3,10 @@
 
 bool is_end = false;
 char Field[HEIGHT][WIDTH];
+Point Walls[WALL_COUNT];
 const char _symbol = '@';
 const char _hammer = '!';
+const char _wall = '#';
 Point symbol_pos;
 Point hammer_pos;
 
@@ -18,12 +20,14 @@ bool checkPositionX(int pos_x);
 bool checkPositionY(int pos_y);
 void throwHammer(Point &pos,Point main_pos);
 void play(char move);
+void spawnWalls();
 
 int main()
 {
     fill();
-    spawnSymbol(symbol_pos,_symbol);
-    spawnSymbol(hammer_pos,_hammer);
+    spawnWalls();
+    spawnSymbol(symbol_pos, _symbol);
+    spawnSymbol(hammer_pos, _hammer);
     reset();
 
     char movement;
@@ -35,7 +39,3 @@ int main()
     }
 
 }
-
-
-
-

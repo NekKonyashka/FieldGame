@@ -11,11 +11,17 @@ void play(char c)
             if (checkHammer()) {
                 if (hammer_pos.y != 0) {
                     --hammer_pos.y;
+                    if (isCollider(hammer_pos)) {
+                        deleteWall();
+                    }
                 }
                 else
                 {
                     ++symbol_pos.y;
                 }
+            }
+            if (isCollider(symbol_pos)) {
+                ++symbol_pos.y;
             }
         }
         break;
@@ -25,13 +31,18 @@ void play(char c)
             if (checkHammer()) {
                 if (hammer_pos.x != 0) {
                     --hammer_pos.x;
+                    if (isCollider(hammer_pos)) {
+                        deleteWall();
+                    }
                 }
                 else
                 {
                     ++symbol_pos.x;
                 }
             }
-
+            if (isCollider(symbol_pos)) {
+                ++symbol_pos.x;
+            }
         }
         break;
     case 's':
@@ -40,10 +51,16 @@ void play(char c)
             if (checkHammer()) {
                 if (hammer_pos.y != HEIGHT - 1) {
                     ++hammer_pos.y;
+                    if (isCollider(hammer_pos)) {
+                        deleteWall();
+                    }
                 }
                 else {
                     --symbol_pos.y;
                 }
+            }
+            if (isCollider(symbol_pos)) {
+                --symbol_pos.y;
             }
         }
         break;
@@ -53,10 +70,16 @@ void play(char c)
             if (checkHammer()) {
                 if (hammer_pos.x != WIDTH - 1) {
                     ++hammer_pos.x;
+                    if (isCollider(hammer_pos)) {
+                        deleteWall();
+                    }
                 }
                 else {
                     --symbol_pos.x;
                 }
+            }
+            if (isCollider(symbol_pos)) {
+                --symbol_pos.x;
             }
         }
         break;
@@ -70,6 +93,9 @@ void play(char c)
         break;
     case ' ':
         throwHammer(hammer_pos, symbol_pos);
+        if (isCollider(hammer_pos)) {
+            deleteWall();
+        }
     }
 }
 void fill() {
@@ -81,6 +107,7 @@ void fill() {
 }
 void reset() {
     fill();
+    setWalls();
     changePosition(symbol_pos, _symbol);
     changePosition(hammer_pos, _hammer);
     show();
@@ -97,8 +124,8 @@ void spawnSymbol(Point& pos, const char symbol) {
     srand(time(NULL));
     int x, y;
     do {
-        x = rand() % (WIDTH - 1);
-        y = rand() % (HEIGHT - 1);
+        x = rand() % WIDTH;
+        y = rand() % HEIGHT;
     } while (Field[y][x] != '.');
     pos.y = y;
     pos.x = x;
@@ -131,5 +158,37 @@ void throwHammer(Point& pos, Point main) {
     }
     else if (main.y == pos.y && checkPositionX(main.x)) {
         pos.x = abs(pos.x - main.x * 2);
+    }
+}
+void spawnWalls() {
+    for (int i = 0; i < WALL_COUNT; i++) {
+        Point wall_pos;
+        spawnSymbol(wall_pos, _wall);
+        Walls[i] = wall_pos;
+    }
+}
+
+void setWalls() {
+    for (Point wall : Walls) {
+        Field[wall.y][wall.x] = _wall;
+    }
+}
+
+bool isCollider(Point pos) {
+    if (Field[pos.y][pos.x] == _wall) {
+        return true;
+    }
+    return false;
+}
+void deleteWall() {
+    Field[hammer_pos.y][hammer_pos.x] = '.';
+    findWall();
+}
+void findWall() {
+    for (Point &wall : Walls) {
+        if (wall.x == hammer_pos.x && wall.y == hammer_pos.y) {
+            wall.x = -1;
+            wall.y = -1;
+        }
     }
 }
