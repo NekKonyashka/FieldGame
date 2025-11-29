@@ -5,7 +5,7 @@ bool is_end = false;
 char Field[HEIGHT][WIDTH];
 Point Walls[WALL_COUNT];
 const char _symbol = '@';
-const char _hammer = '!';
+const char _hammer = 'T';
 const char _wall = '#';
 Point symbol_pos;
 Point hammer_pos;
@@ -32,7 +32,7 @@ int main()
 
     char movement;
     while (!is_end) {
-        scanf_s("%c", &movement);
+        movement = _getch();
         play(movement);
         system("cls");
         reset();

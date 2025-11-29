@@ -1,7 +1,6 @@
 #include "functions.h"
 #include <random>
 
-
 void play(char c)
 {
     switch (c) {
